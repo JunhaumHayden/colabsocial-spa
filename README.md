@@ -1,0 +1,245 @@
+# colabsocial-spa
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+
+## Built with v0
+
+This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+
+[Continue working on v0 →](https://v0.app/chat/projects/prj_FY1k9xY6F59g9dFSWSCwqkGuwLpP)
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+## Supabase Setup
+
+1. Copy `.env.local.example` to `.env.local`.
+2. Add your Supabase values:
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+3. Open the Supabase SQL editor and execute the SQL files in this order:
+   - `supabase/init.sql` to create the base tables, views and seed data.
+   - `supabase/github_issue_flow.sql` to add the GitHub issue contribution flow database layer.
+   - `supabase/allow_multiple_collaborators_per_issue.sql` to allow multiple collaborators per issue and add explicit issue finalization.
+   - `supabase/colabscore_configuration.sql` to add project and issue-level ColabScore settings.
+   - `supabase/business_validation_mvp.sql` to add the initial business validation MVP tables.
+   - `supabase/business_validation_sources_update.sql` to add source metadata for external validation evidence.
+   - `supabase/business_validation_connector_status.sql` to store connector execution status for each validation run.
+   - `supabase/business_validation_investment_signals.sql` to store investment and fundraising evidence signals.
+   - `supabase/business_validation_investment_explainability.sql` to add readable classification, similarity explanations and novelty-impact fields for investment signals.
+   - `supabase/colabai_assist_lite.sql` to add ColabAI Assist Lite credits, prompts, feature flags and usage logs.
+4. Start the app with `npm run dev`, `yarn dev`, or `pnpm dev` once Node.js is installed.
+
+## GitHub Webhook
+
+Configure these environment variables for the GitHub contribution flow:
+
+- `GITHUB_TOKEN` — required to merge Pull Requests from the review screen, useful for higher GitHub API limits, and optional for Business Validation GitHub searches.
+- `GITHUB_WEBHOOK_SECRET` — required for signed GitHub webhook verification in production.
+- `BRAVE_SEARCH_API_KEY` — optional; enables broader web search in the Business Validation MVP.
+- `TAVILY_API_KEY` — optional; preferred provider for the Business Validation investment/fundraising layer.
+
+For each project repository, create a GitHub webhook pointing to:
+
+```text
+https://YOUR_APP_DOMAIN/api/github/webhook
+```
+
+Use these settings:
+
+- Content type: `application/json`
+- Secret: the same value configured in `GITHUB_WEBHOOK_SECRET`.
+- Events: `push`
+
+Commits should include the claim key in the message, for example:
+
+```text
+COSOCIAL:CS-ABC12345 fix issue #12
+```
+
+The webhook only marks matching assignments and issues as `submitted`. Points are awarded later after owner review.
+
+## Fluxo com múltiplos colaboradores
+
+Uma issue do GitHub pode receber contribuições de vários colaboradores ao mesmo tempo. Cada colaborador mantém sua própria assignment, branch e evidência.
+
+Aceitar uma entrega pontua o colaborador, mas não fecha a issue automaticamente. O responsável deve finalizar a issue na tela de revisão para encerrar novas contribuições.
+
+## Dashboard real
+
+The home page dashboard reads real data from Supabase through `GET /api/dashboard`.
+It uses accepted assignments and `public.colab_points` as the source of truth for awarded points. If an accepted assignment does not yet have a `colab_points` row, the dashboard falls back to `issue_assignments.accepted_points`.
+
+## ColabAI Assist Lite
+
+`/colabai` is a minimal AI assistant for the GitHub contribution flow. It helps collaborators and project owners explain issues, generate technical plans, create implementation checklists, generate IDE prompt packs, review submissions, and validate whether a delivery matches the original issue.
+
+The MVP uses internal credits stored in Supabase. If an account does not exist for an email, the backend creates it with 20 monthly credits. Usage is logged in `public.ai_usage_events`; API keys are never exposed to the frontend.
+
+Run `supabase/colabai_assist_lite.sql` before using the feature.
+
+Optional environment variables:
+
+- `AI_PROVIDER=openrouter`
+- `OPENROUTER_API_KEY`
+- `REQUESTY_API_KEY`
+- `AI_DEFAULT_MODEL`
+- `AI_PREMIUM_MODEL`
+
+If no AI API key is configured, the backend uses the mock provider and returns a deterministic local demonstration response.
+
+To test locally:
+
+1. Run `npm run dev`.
+2. Open `/colabai`.
+3. Enter an email.
+4. Select a project and issue.
+5. Run `Explicar tarefa`.
+
+Security notes:
+
+- Never expose AI provider API keys in frontend code.
+- Never send raw webhook payloads to the AI provider.
+- The context builder masks values that look like tokens, secrets, passwords, API keys or `.env` content.
+- `ai_usage_events` stores only metadata, not raw prompts or raw webhook payloads.
+
+## Legal & Equity Hub MVP
+
+`/legal-equity` is an educational MVP for project owners and collaborators to understand estimated participation, rights, legal documents, cap table, dilution, intellectual property and future investor scenarios.
+
+It is educational only and does not provide legal advice or promise legal validity. Professional legal, accounting and tax review is required before any signature, equity grant, profit distribution or company formation.
+
+The MVP includes:
+
+- Cap table and dilution simulation.
+- Profit distribution simulation.
+- Educational document cards and previews.
+- Collaborator rights example.
+- Project governance checklist.
+- Demonstrative legal-societary agent actions.
+- Legal limitations and safety notes.
+
+Future work includes real ColabScore integration, AI-generated draft documents, PDF export, accepted document tracking, electronic signature integration and a legal/accounting expert marketplace.
+
+## Maturity & Investment Hub MVP
+
+`/maturity-investment` is an educational and demonstrative module for measuring project/startup maturity. It currently uses simulated data to show a Startup Maturity Index from 0 to 100.
+
+The page includes technical, product, commercial, financial, legal/societary and investment readiness dimensions. It also includes a deterministic Investor Readiness Report demo, opportunities for improvement, investment readiness summaries and regulatory disclaimers.
+
+This module does not provide investment advice and does not perform securities offerings. Future work includes integration with GitHub, ColabScore, Business Validation, Legal & Equity Hub, financial data, customer data and a controlled investor showcase.
+
+## Funding Opportunities Hub MVP
+
+`/funding-opportunities` is a demonstrative module for finding, filtering and preparing applications for funding opportunities, public calls, grants, acceleration programs and innovation challenges.
+
+This MVP currently uses simulated opportunities only. It supports client-side filters by area, state, funding value, opportunity type and startup stage. It shows a match score, detail panel, local saved opportunities, simulated e-mail alert preview and an interactive submission checklist.
+
+The module connects conceptually with Maturity & Investment Hub, Legal & Equity Hub and Business Validation. Future work includes a real curated opportunity database, saved alert preferences, real e-mail notifications, permitted APIs/RSS/crawlers and ColabAI summarization of edital PDFs and requirements.
+
+## Validação de Negócio MVP
+
+`/validar-negocio` is an initial business validation module for project owners. It generates suggested search queries, initial competitor hypotheses, novelty/risk/differentiation scores, and a critical report.
+
+This MVP uses public sources such as GitHub Search, Hacker News Algolia, Wikipedia/OpenSearch, OpenAlex, and optionally Brave Search. If external APIs fail, it falls back to local deterministic candidates and clearly marks them as fallback.
+
+Future work can add Product Hunt official GraphQL, Google Patents through an allowed source, app store search, source confidence calibration, and manual reviewer validation.
+
+## Queries, evidências externas e hipóteses locais
+
+Queries are short search terms used to consult external sources. They are not results by themselves.
+
+External evidence can come from GitHub, Hacker News, Wikipedia, OpenAlex, or Brave Search. Local fallback hypotheses are not external evidence and must be used only to guide manual investigation.
+
+Previous validation history is shown only as history, not as competitor evidence. The validation flow must not compare a project with itself or use previous runs from the same idea as market evidence.
+
+## Investment & Fundraising Signals
+
+The Business Validation module also has an investment and fundraising evidence layer. When a web search provider is configured, it searches public web results for similar startups or business models in investment platforms, equity crowdfunding platforms, angel networks, accelerators, VC sources, startup databases, market intelligence pages and fundraising-related public pages.
+
+Examples of targeted sources include Captable, EqSeed, SMU/StartMeUp, Kria, Wiztartup, Anjos do Brasil, Bossa Invest, ACE, WOW Aceleradora, Distrito, StartSe, Latitud, ABStartups, ABVCAP, CVM public sources, Sling Hub, Crunchbase, PitchBook, CB Insights, Dealroom and Tracxn.
+
+This layer matters for the innovation criterion because a similar startup appearing in public investment or fundraising sources is evidence that the model already has public market presence. It can reduce the novelty score when the similarity is meaningful.
+
+Important: an investment listing is a market validation signal, not a success guarantee. The app must not claim that a startup raised money unless that appears explicitly in the public search result or snippet.
+
+Provider priority for this layer:
+
+1. Tavily, when `TAVILY_API_KEY` exists.
+2. Google Custom Search, when `GOOGLE_CUSTOM_SEARCH_API_KEY` and `GOOGLE_CUSTOM_SEARCH_ENGINE_ID` exist.
+3. SerpAPI, when `SERPAPI_KEY` exists.
+4. Brave Search, when `BRAVE_SEARCH_API_KEY` exists.
+
+To configure Tavily locally:
+
+```bash
+TAVILY_API_KEY=tvly-...
+```
+
+After changing `.env.local`, restart the dev server so Next.js reloads server-side environment variables.
+
+Without a configured provider, the UI shows the investment layer as not configured and no fallback investment signals are generated. Use `GET /api/business-validation/test-investment-signals` to verify which provider the server sees; the endpoint never returns API key values.
+
+## Home page organization
+
+The home page includes a feature carousel near the top to explain the full CoSocial journey: idea registration, Business Validation, squad formation, GitHub task execution, evidence capture, ColabScore, Legal & Equity, Maturity Hub, and funding or investment opportunities.
+
+The first carousel card shows the full CoSocial journey with the visual flow image from `public/home/cosocial-flow.png`.
+
+Module cards now use feature-specific visual illustrations stored in `public/home/feature-cards/`: `card2.png` for Business Validation, `card3.png` for GitHub task flow, `card4.png` for ColabScore, `card5.png` for ColabAI, `card6.png` for Legal & Equity, `card7.png` for Maturity Hub, and `card8.png` for Funding Opportunities.
+
+It also groups modules by user intention so visitors can quickly choose whether they want to register an idea, contribute to a project, review deliveries, configure ColabScore, use ColabAI, prepare legal/equity materials, measure maturity, or search funding opportunities.
+
+Main module links from the home page point to Business Validation (`/validar-negocio`), GitHub task flow (`/contribuir/projetos`), owner review (`/responsavel/revisar`), ColabScore (`/responsavel/colabscore`), ColabAI (`/colabai`), Legal & Equity (`/legal-equity`), Maturity Hub (`/maturity-investment`), and Funding Opportunities (`/funding-opportunities`).
+
+## Controlling external search usage
+
+Tavily and other web search providers may consume paid quota per search request. The Business Validation MVP intentionally limits investment/fundraising searches to avoid wasting credits while the feature is still stabilizing.
+
+Optional environment variables:
+
+```bash
+MAX_INVESTMENT_QUERIES_PER_RUN=3
+MAX_WEB_RESULTS_PER_QUERY=3
+MAX_TOTAL_INVESTMENT_RESULTS=10
+```
+
+Defaults:
+
+- Run at most 3 investment/fundraising queries per validation.
+- Request at most 3 web results per query.
+- Save at most 10 investment signal results total.
+
+Increase these limits only after the feature is stable and quota usage is understood. Restart the dev server after changing `.env.local`.
+
+## API Endpoints
+
+- `POST /api/ideas` — cadastra uma ideia
+- `GET /api/ideas` — lista ideias cadastradas
+- `POST /api/collaborators` — cadastra colaborador
+- `GET /api/collaborators` — lista colaboradores cadastrados
+- `GET /api/dashboard` — consolida métricas reais do dashboard
+- `POST /api/github/webhook` — captura commits de push do GitHub
+- `GET /api/ai/credits` — mostra créditos e uso recente do ColabAI
+- `POST /api/ai/colabai-action` — executa uma ação do ColabAI no backend
+
+## Learn More
+
+To learn more, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
