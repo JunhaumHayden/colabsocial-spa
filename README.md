@@ -32,6 +32,8 @@ The selected language is stored in `localStorage` with the key `colabsocial-lang
 
 Translations live in `src/i18n/translations.ts`, and the UI reads them through the language provider in `src/i18n/LanguageProvider.tsx`. To add or update copy, add the same key under both `pt-BR` and `en`, then use `useLanguage()` or `t("path.to.key")` in the component.
 
+The home carousel also switches image assets with the selected language. Portuguese carousel images are stored in `public/home/` and `public/home/feature-cards/`; English carousel images use `public/home/cosocial-flow-en.png` and `public/home/feature-cards/english/`.
+
 ## Supabase Setup
 
 1. Copy `.env.local.example` to `.env.local`.
@@ -205,9 +207,9 @@ Without a configured provider, the UI shows the investment layer as not configur
 
 The home page includes a feature carousel near the top to explain the full CoSocial journey: idea registration, Business Validation, squad formation, GitHub task execution, evidence capture, ColabScore, Legal & Equity, Maturity Hub, and funding or investment opportunities.
 
-The first carousel card shows the full CoSocial journey with the visual flow image from `public/home/cosocial-flow.png`.
+The first carousel card shows the full CoSocial journey with language-aware flow images: `public/home/cosocial-flow.png` for Portuguese and `public/home/cosocial-flow-en.png` for English.
 
-Module cards now use feature-specific visual illustrations stored in `public/home/feature-cards/`: `card2.png` for Business Validation, `card3.png` for GitHub task flow, `card4.png` for ColabScore, `card5.png` for ColabAI, `card6.png` for Legal & Equity, `card7.png` for Maturity Hub, and `card8.png` for Funding Opportunities.
+Module cards use feature-specific visual illustrations stored in `public/home/feature-cards/` for Portuguese and `public/home/feature-cards/english/` for English. The carousel switches between `card2.png` through `card8.png` and `card2-en.png` through `card8-en.png` automatically when the selected language changes.
 
 It also groups modules by user intention so visitors can quickly choose whether they want to register an idea, contribute to a project, review deliveries, configure ColabScore, use ColabAI, prepare legal/equity materials, measure maturity, or search funding opportunities.
 

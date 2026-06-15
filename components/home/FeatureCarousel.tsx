@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useLanguage } from "@/src/i18n/LanguageProvider"
 
+interface LocalizedImage {
+  pt: string
+  en: string
+}
+
 interface FeatureSlide {
   eyebrow: string
   title: string
@@ -17,8 +22,8 @@ interface FeatureSlide {
   cta: string
   href: string
   stageBadge?: string
-  visualSrc?: string
-  visualAlt?: string
+  image: LocalizedImage
+  imageAlt: LocalizedImage
   isFlowImage?: boolean
 }
 
@@ -30,6 +35,14 @@ const slides: FeatureSlide[] = [
     bullets: [],
     cta: "Explorar o fluxo",
     href: "#platform-flow",
+    image: {
+      pt: "/home/cosocial-flow.png",
+      en: "/home/cosocial-flow-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do fluxo CoSocial da ideia à startup",
+      en: "CoSocial flow illustration from idea to startup",
+    },
     isFlowImage: true,
   },
   {
@@ -40,8 +53,14 @@ const slides: FeatureSlide[] = [
     cta: "Validar uma ideia",
     href: "/validar-negocio",
     stageBadge: "Validação",
-    visualSrc: "/home/feature-cards/card2.png",
-    visualAlt: "Ilustração da Validação de Negócio com evidências externas e relatório crítico",
+    image: {
+      pt: "/home/feature-cards/card2.png",
+      en: "/home/feature-cards/english/card2-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração da Validação de Negócio com evidências externas, concorrentes, sinais de mercado e relatório crítico",
+      en: "Business Validation illustration with external evidence, competitors, market signals and critical report",
+    },
   },
   {
     eyebrow: "GitHub + colaboração",
@@ -51,8 +70,14 @@ const slides: FeatureSlide[] = [
     cta: "Ver projetos para contribuir",
     href: "/contribuir/projetos",
     stageBadge: "Execução",
-    visualSrc: "/home/feature-cards/card3.png",
-    visualAlt: "Ilustração do fluxo de contribuição por tarefas com issues, branches, commits e revisão",
+    image: {
+      pt: "/home/feature-cards/card3.png",
+      en: "/home/feature-cards/english/card3-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do fluxo de contribuição por tarefas com issues, branches, commits, evidências e revisão",
+      en: "Task contribution workflow illustration with issues, branches, commits, evidence and review",
+    },
   },
   {
     eyebrow: "Pontuação e reputação",
@@ -62,8 +87,14 @@ const slides: FeatureSlide[] = [
     cta: "Configurar ColabScore",
     href: "/responsavel/colabscore",
     stageBadge: "Pontuação",
-    visualSrc: "/home/feature-cards/card4.png",
-    visualAlt: "Ilustração do painel ColabScore com pontuação, reputação e entregas aceitas",
+    image: {
+      pt: "/home/feature-cards/card4.png",
+      en: "/home/feature-cards/english/card4-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do painel ColabScore com pontuação, reputação e entregas aceitas",
+      en: "ColabScore dashboard illustration with score, reputation and accepted deliveries",
+    },
   },
   {
     eyebrow: "Assistente de IA",
@@ -73,8 +104,14 @@ const slides: FeatureSlide[] = [
     cta: "Abrir ColabAI",
     href: "/colabai",
     stageBadge: "IA para colaboração",
-    visualSrc: "/home/feature-cards/card5.png",
-    visualAlt: "Ilustração do ColabAI Assist com plano técnico, Prompt Pack e revisão de entrega",
+    image: {
+      pt: "/home/feature-cards/card5.png",
+      en: "/home/feature-cards/english/card5-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do ColabAI Assist com assistente por issue, plano técnico, Prompt Pack e revisão de entrega",
+      en: "ColabAI Assist illustration with issue assistant, technical plan, Prompt Pack and delivery review",
+    },
   },
   {
     eyebrow: "Governança inicial",
@@ -84,8 +121,14 @@ const slides: FeatureSlide[] = [
     cta: "Abrir Legal & Equity",
     href: "/legal-equity",
     stageBadge: "Governança",
-    visualSrc: "/home/feature-cards/card6.png",
-    visualAlt: "Ilustração do Legal & Equity Hub com cap table, diluição e documentos",
+    image: {
+      pt: "/home/feature-cards/card6.png",
+      en: "/home/feature-cards/english/card6-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do Legal & Equity Hub com cap table, diluição, documentos e governança",
+      en: "Legal and Equity Hub illustration with cap table, dilution, documents and governance",
+    },
   },
   {
     eyebrow: "Maturidade do projeto",
@@ -95,8 +138,14 @@ const slides: FeatureSlide[] = [
     cta: "Abrir Maturity Hub",
     href: "/maturity-investment",
     stageBadge: "Maturidade",
-    visualSrc: "/home/feature-cards/card7.png",
-    visualAlt: "Ilustração do Maturity & Investment Hub com índice de maturidade e relatório para investidores",
+    image: {
+      pt: "/home/feature-cards/card7.png",
+      en: "/home/feature-cards/english/card7-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do Maturity & Investment Hub com índice de maturidade e relatório para investidores",
+      en: "Maturity and Investment Hub illustration with maturity index and investor readiness report",
+    },
   },
   {
     eyebrow: "Editais e financiamento",
@@ -106,13 +155,19 @@ const slides: FeatureSlide[] = [
     cta: "Buscar oportunidades",
     href: "/funding-opportunities",
     stageBadge: "Financiamento",
-    visualSrc: "/home/feature-cards/card8.png",
-    visualAlt: "Ilustração do Funding Opportunities Hub com editais, filtros, match score e alertas",
+    image: {
+      pt: "/home/feature-cards/card8.png",
+      en: "/home/feature-cards/english/card8-en.png",
+    },
+    imageAlt: {
+      pt: "Ilustração do Funding Opportunities Hub com editais, filtros, match score, checklist e alertas por e-mail",
+      en: "Funding Opportunities Hub illustration with calls, filters, match score, checklist and email alerts",
+    },
   },
 ]
 
 export function FeatureCarousel() {
-  const { content } = useLanguage()
+  const { content, language } = useLanguage()
   const carousel = content.home.featureCarousel
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -131,6 +186,8 @@ export function FeatureCarousel() {
 
   const slide = { ...slides[activeIndex], ...carousel.slides[activeIndex] }
   const isFlowImageSlide = Boolean(slide.isFlowImage)
+  const imageSrc = language === "en" ? slide.image.en : slide.image.pt
+  const imageAlt = language === "en" ? slide.imageAlt.en : slide.imageAlt.pt
 
   const goToPrevious = () => {
     setActiveIndex((current) => (current - 1 + slides.length) % slides.length)
@@ -218,8 +275,8 @@ export function FeatureCarousel() {
                   <div className="flex h-full items-center justify-center pt-8 lg:pt-0">
                     <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-border bg-card shadow-xl shadow-primary/10">
                       <Image
-                        src="/home/cosocial-flow.png"
-                        alt={carousel.flowImageAlt}
+                        src={imageSrc}
+                        alt={imageAlt}
                         fill
                         priority
                         sizes="(min-width: 1024px) 720px, 100vw"
@@ -230,8 +287,8 @@ export function FeatureCarousel() {
                 ) : (
                   <div className="flex h-full items-center justify-center pt-10 lg:pt-0">
                     <FeatureCardVisual
-                      src={slide.visualSrc ?? "/placeholder.svg"}
-                      alt={slide.visualAlt ?? `${slide.title} no CoSocial`}
+                      src={imageSrc}
+                      alt={imageAlt}
                     />
                   </div>
                 )}
