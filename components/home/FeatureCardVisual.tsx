@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import { ImageIcon } from "lucide-react"
+import { useLanguage } from "@/src/i18n/LanguageProvider"
 
 interface FeatureCardVisualProps {
   src: string
@@ -10,6 +11,7 @@ interface FeatureCardVisualProps {
 }
 
 export function FeatureCardVisual({ src, alt }: FeatureCardVisualProps) {
+  const { t } = useLanguage()
   const [hasImageError, setHasImageError] = useState(false)
 
   return (
@@ -38,7 +40,7 @@ export function FeatureCardVisual({ src, alt }: FeatureCardVisualProps) {
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <ImageIcon className="h-8 w-8" />
             </div>
-            <p className="mt-5 text-sm font-semibold text-foreground">Imagem do módulo não encontrada</p>
+            <p className="mt-5 text-sm font-semibold text-foreground">{t("home.imageFallback.missing")}</p>
           </div>
         </div>
       )}

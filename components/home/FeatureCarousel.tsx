@@ -7,6 +7,7 @@ import { FeatureCardVisual } from "@/components/home/FeatureCardVisual"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useLanguage } from "@/src/i18n/LanguageProvider"
 
 interface FeatureSlide {
   eyebrow: string
@@ -111,6 +112,8 @@ const slides: FeatureSlide[] = [
 ]
 
 export function FeatureCarousel() {
+  const { content } = useLanguage()
+  const carousel = content.home.featureCarousel
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
@@ -126,7 +129,7 @@ export function FeatureCarousel() {
     return () => window.clearInterval(interval)
   }, [isPaused])
 
-  const slide = slides[activeIndex]
+  const slide = { ...slides[activeIndex], ...carousel.slides[activeIndex] }
   const isFlowImageSlide = Boolean(slide.isFlowImage)
 
   const goToPrevious = () => {
@@ -143,12 +146,12 @@ export function FeatureCarousel() {
         <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <Badge variant="outline" className="mb-3">
-              Módulos da plataforma
+              {carousel.sectionBadge}
             </Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">O que dá para fazer no CoSocial</h2>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{carousel.title}</h2>
           </div>
           <p className="max-w-2xl text-muted-foreground">
-            Entenda a jornada completa e acesse rapidamente os módulos que já estão disponíveis.
+            {carousel.subtitle}
           </p>
         </div>
 
@@ -195,10 +198,10 @@ export function FeatureCarousel() {
                     </a>
                   </Button>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon" aria-label="Slide anterior" onClick={goToPrevious}>
+                    <Button variant="outline" size="icon" aria-label={carousel.previousSlide} onClick={goToPrevious}>
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" aria-label="Próximo slide" onClick={goToNext}>
+                    <Button variant="outline" size="icon" aria-label={carousel.nextSlide} onClick={goToNext}>
                       <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
@@ -216,7 +219,7 @@ export function FeatureCarousel() {
                     <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-border bg-card shadow-xl shadow-primary/10">
                       <Image
                         src="/home/cosocial-flow.png"
-                        alt="Fluxo CoSocial da ideia à startup"
+                        alt={carousel.flowImageAlt}
                         fill
                         priority
                         sizes="(min-width: 1024px) 720px, 100vw"
@@ -238,11 +241,11 @@ export function FeatureCarousel() {
         </Card>
 
         <div className="mt-5 flex justify-center gap-2">
-          {slides.map((item, index) => (
+          {carousel.slides.map((item, index) => (
             <button
               key={item.title}
               type="button"
-              aria-label={`Ir para slide ${index + 1}: ${item.title}`}
+              aria-label={`${carousel.goToSlide} ${index + 1}: ${item.title}`}
               className={`h-2.5 rounded-full transition-all ${
                 activeIndex === index ? "w-8 bg-primary" : "w-2.5 bg-muted-foreground/35 hover:bg-muted-foreground/60"
               }`}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { VisualThemeProvider } from '@/components/VisualThemeProvider'
+import { LanguageProvider } from '@/src/i18n/LanguageProvider'
 import './globals.css'
 
 const inter = Inter({ 
@@ -46,7 +47,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
-        <VisualThemeProvider>{children}</VisualThemeProvider>
+        <LanguageProvider>
+          <VisualThemeProvider>{children}</VisualThemeProvider>
+        </LanguageProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

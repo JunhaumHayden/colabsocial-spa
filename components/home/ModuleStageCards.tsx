@@ -1,5 +1,8 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { useLanguage } from "@/src/i18n/LanguageProvider"
 
 const stages = [
   {
@@ -29,21 +32,28 @@ const stages = [
 ]
 
 export function ModuleStageCards() {
+  const { content } = useLanguage()
+  const moduleStages = content.home.moduleStages
+  const stagesWithText = stages.map((stage, index) => ({
+    ...stage,
+    ...moduleStages.stages[index],
+  }))
+
   return (
     <section id="module-stages" className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <Badge variant="outline" className="mb-3">
-            Maturidade do projeto
+            {moduleStages.badge}
           </Badge>
-          <h2 className="text-3xl font-bold text-foreground md:text-4xl">Use o módulo certo para cada estágio</h2>
+          <h2 className="text-3xl font-bold text-foreground md:text-4xl">{moduleStages.title}</h2>
           <p className="mx-auto mt-3 max-w-3xl text-lg text-muted-foreground">
-            O CoSocial não obriga um caminho único: escolha o módulo que responde à próxima pergunta do projeto.
+            {moduleStages.subtitle}
           </p>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {stages.map((stage) => (
+          {stagesWithText.map((stage) => (
             <Card key={stage.title} className="border-border bg-card">
               <CardContent className="flex h-full flex-col p-6">
                 <h3 className="text-xl font-semibold text-foreground">{stage.title}</h3>
@@ -56,7 +66,7 @@ export function ModuleStageCards() {
                   ))}
                 </div>
                 <a href={stage.href} className="mt-6 text-sm font-medium text-primary hover:underline">
-                  Ver módulo recomendado
+                  {moduleStages.recommended}
                 </a>
               </CardContent>
             </Card>

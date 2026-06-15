@@ -24,6 +24,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Language selection
+
+The SPA supports Portuguese (`pt-BR`) and English (`en`). The default language is `pt-BR`.
+
+The selected language is stored in `localStorage` with the key `colabsocial-language`, so the choice persists after refresh.
+
+Translations live in `src/i18n/translations.ts`, and the UI reads them through the language provider in `src/i18n/LanguageProvider.tsx`. To add or update copy, add the same key under both `pt-BR` and `en`, then use `useLanguage()` or `t("path.to.key")` in the component.
+
 ## Supabase Setup
 
 1. Copy `.env.local.example` to `.env.local`.

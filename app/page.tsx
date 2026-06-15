@@ -27,6 +27,7 @@ import {
   X
 } from "lucide-react"
 import { BrandLogo } from "@/components/BrandLogo"
+import { LanguageSelector } from "@/components/LanguageSelector"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { FeatureCarousel } from "@/components/home/FeatureCarousel"
 import { ModuleStageCards } from "@/components/home/ModuleStageCards"
@@ -45,6 +46,7 @@ import {
   SelectValue 
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { useLanguage } from "@/src/i18n/LanguageProvider"
 import { useEffect, useState, type FormEvent } from "react"
 
 interface Idea {
@@ -128,13 +130,13 @@ interface DashboardData {
 }
 
 const navLinks = [
-  { href: "#como-funciona", label: "Como Funciona" },
-  { href: "#modules", label: "Módulos" },
-  { href: "#colabscore", label: "ColabScore" },
-  { href: "#dashboard", label: "Dashboard" },
-  { href: "/colabai", label: "ColabAI" },
-  { href: "/legal-equity", label: "Legal" },
-  { href: "#toolkit", label: "Toolkit" },
+  { href: "#como-funciona", labelKey: "nav.howItWorks" },
+  { href: "#modules", labelKey: "nav.modules" },
+  { href: "#colabscore", labelKey: "nav.colabScore" },
+  { href: "#dashboard", labelKey: "nav.dashboard" },
+  { href: "/colabai", labelKey: "nav.colabAi" },
+  { href: "/legal-equity", labelKey: "nav.legal" },
+  { href: "#toolkit", labelKey: "nav.toolkit" },
 ]
 
 const processSteps = [
@@ -168,6 +170,7 @@ const toolkitSteps = [
 ]
 
 function Navbar() {
+  const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -185,28 +188,30 @@ function Navbar() {
                 href={link.href} 
                 className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium whitespace-nowrap"
               >
-                {link.label}
+                {t(link.labelKey)}
               </a>
             ))}
           </div>
 
           <div className="hidden md:flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
-              <a href="#cadastrar-ideia">Cadastrar Ideia</a>
+              <a href="#cadastrar-ideia">{t("nav.registerIdea")}</a>
             </Button>
             <Button variant="outline" size="sm" asChild>
-              <a href="/contribuir/projetos">Projetos</a>
+              <a href="/contribuir/projetos">{t("nav.projects")}</a>
             </Button>
             <Button variant="outline" size="sm" asChild>
-              <a href="/responsavel/revisar">Revisar</a>
+              <a href="/responsavel/revisar">{t("nav.review")}</a>
             </Button>
             <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
-              <a href="#colaborar">Colaborar</a>
+              <a href="#colaborar">{t("nav.collaborate")}</a>
             </Button>
+            <LanguageSelector />
             <ThemeToggle />
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
+            <LanguageSelector />
             <ThemeToggle />
             <button 
               className="p-2 text-foreground"
@@ -227,21 +232,21 @@ function Navbar() {
                   className="text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </a>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 <Button variant="outline" size="sm" asChild>
-                  <a href="#cadastrar-ideia">Cadastrar Ideia</a>
+                  <a href="#cadastrar-ideia">{t("nav.registerIdea")}</a>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="/contribuir/projetos">Ver projetos</a>
+                  <a href="/contribuir/projetos">{t("nav.viewProjects")}</a>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="/responsavel/revisar">Revisar tarefas</a>
+                  <a href="/responsavel/revisar">{t("nav.reviewTasks")}</a>
                 </Button>
                 <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
-                  <a href="#colaborar">Colaborar</a>
+                  <a href="#colaborar">{t("nav.collaborate")}</a>
                 </Button>
               </div>
             </div>
@@ -253,6 +258,9 @@ function Navbar() {
 }
 
 function HeroSection() {
+  const { content } = useLanguage()
+  const hero = content.home.hero
+
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
       {/* Background gradient effect */}
@@ -269,27 +277,26 @@ function HeroSection() {
         </div>
         
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 text-balance leading-tight">
-          CoSocial transforma ideias em{" "}
-          <span className="text-primary">projetos colaborativos</span>, evidências e{" "}
-          <span className="text-secondary">oportunidades reais</span>.
+          {hero.titleStart}{" "}
+          <span className="text-primary">{hero.titlePrimary}</span>{hero.titleMiddle}{" "}
+          <span className="text-secondary">{hero.titleSecondary}</span>{hero.titleEnd}
         </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto mb-10 text-pretty leading-relaxed">
-          Cadastre uma ideia, valide o negócio, conecte colaboradores, execute tarefas, registre evidências,
-          calcule ColabScore e prepare o projeto para maturidade, governança e financiamento.
+          {hero.subtitle}
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg" asChild>
             <a href="#cadastrar-ideia">
               <Lightbulb className="mr-2 h-5 w-5" />
-              Começar uma ideia
+              {hero.primaryCta}
             </a>
           </Button>
           <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary/10 px-8 py-6 text-lg" asChild>
             <a href="#modules">
               <ClipboardList className="mr-2 h-5 w-5" />
-              Ver módulos disponíveis
+              {hero.secondaryCta}
             </a>
           </Button>
         </div>
@@ -299,18 +306,25 @@ function HeroSection() {
 }
 
 function HowItWorksSection() {
+  const { content } = useLanguage()
+  const howItWorks = content.home.howItWorks
+  const processStepsWithText = processSteps.map((step, index) => ({
+    ...step,
+    ...howItWorks.processSteps[index],
+  }))
+
   return (
     <section id="como-funciona" className="py-24 bg-card/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Como funciona</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{howItWorks.title}</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Do nascimento da ideia até a criação de uma nova empresa, acompanhe cada etapa do processo
+            {howItWorks.subtitle}
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-          {processSteps.map((step, index) => (
+          {processStepsWithText.map((step, index) => (
             <Card 
               key={index} 
               className="bg-card border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 group"
@@ -340,6 +354,8 @@ function HowItWorksSection() {
 }
 
 function IdeaFormSection() {
+  const { content } = useLanguage()
+  const ideaForm = content.home.ideaForm
   const [nomeIdeia, setNomeIdeia] = useState('')
   const [emailIdeia, setEmailIdeia] = useState('')
   const [nomeProjeto, setNomeProjeto] = useState('')
@@ -374,10 +390,10 @@ function IdeaFormSection() {
       const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result?.error || 'Erro ao enviar a ideia. Tente novamente.')
+        throw new Error(result?.error || ideaForm.submitError)
       }
 
-      alert('Ideia enviada com sucesso! Obrigado pelo seu cadastro.')
+      alert(ideaForm.success)
       setNomeIdeia('')
       setEmailIdeia('')
       setNomeProjeto('')
@@ -387,7 +403,7 @@ function IdeaFormSection() {
       setAjuda('')
       setGithubRepoUrl('')
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Erro desconhecido ao enviar a ideia.')
+      alert(error instanceof Error ? error.message : ideaForm.unknownError)
     } finally {
       setIsSubmitting(false)
     }
@@ -399,125 +415,124 @@ function IdeaFormSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Para quem tem uma ideia
+              {ideaForm.title}
             </h2>
             <p className="text-lg text-muted-foreground mb-6 text-pretty">
-              Tem uma ideia, mas ainda não tem equipe? Cadastre sua proposta e encontre colaboradores 
-              apaixonados por transformar inovação em realidade.
+              {ideaForm.description}
             </p>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Lightbulb className="h-4 w-4 text-accent" />
-                <span>Valide seu conceito</span>
+                <span>{ideaForm.benefits[0]}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-accent" />
-                <span>Encontre talentos</span>
+                <span>{ideaForm.benefits[1]}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Rocket className="h-4 w-4 text-accent" />
-                <span>Lance seu MVP</span>
+                <span>{ideaForm.benefits[2]}</span>
               </div>
             </div>
           </div>
           
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-xl text-foreground">Cadastre sua ideia</CardTitle>
-              <CardDescription>Preencha os dados abaixo para começar</CardDescription>
+              <CardTitle className="text-xl text-foreground">{ideaForm.cardTitle}</CardTitle>
+              <CardDescription>{ideaForm.cardDescription}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="nome-ideia">Nome</Label>
+                    <Label htmlFor="nome-ideia">{ideaForm.fields.name}</Label>
                     <Input
                       id="nome-ideia"
                       value={nomeIdeia}
                       onChange={(event) => setNomeIdeia(event.target.value)}
-                      placeholder="Seu nome"
+                      placeholder={ideaForm.fields.namePlaceholder}
                       className="bg-input"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email-ideia">E-mail</Label>
+                    <Label htmlFor="email-ideia">{ideaForm.fields.email}</Label>
                     <Input
                       id="email-ideia"
                       type="email"
                       value={emailIdeia}
                       onChange={(event) => setEmailIdeia(event.target.value)}
-                      placeholder="seu@email.com"
+                      placeholder={ideaForm.fields.emailPlaceholder}
                       className="bg-input"
                       required
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="nome-projeto">Nome da ideia</Label>
+                  <Label htmlFor="nome-projeto">{ideaForm.fields.ideaName}</Label>
                   <Input
                     id="nome-projeto"
                     value={nomeProjeto}
                     onChange={(event) => setNomeProjeto(event.target.value)}
-                    placeholder="Nome do seu projeto"
+                    placeholder={ideaForm.fields.ideaNamePlaceholder}
                     className="bg-input"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="problema">Qual problema resolve?</Label>
+                  <Label htmlFor="problema">{ideaForm.fields.problem}</Label>
                   <Textarea
                     id="problema"
                     value={problema}
                     onChange={(event) => setProblema(event.target.value)}
-                    placeholder="Descreva o problema que sua ideia resolve..."
+                    placeholder={ideaForm.fields.problemPlaceholder}
                     className="bg-input min-h-[80px]"
                     required
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="publico">Público-alvo</Label>
+                    <Label htmlFor="publico">{ideaForm.fields.audience}</Label>
                     <Input
                       id="publico"
                       value={publico}
                       onChange={(event) => setPublico(event.target.value)}
-                      placeholder="Ex: PMEs, estudantes..."
+                      placeholder={ideaForm.fields.audiencePlaceholder}
                       className="bg-input"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="estagio">Estágio</Label>
+                    <Label htmlFor="estagio">{ideaForm.fields.stage}</Label>
                     <Select value={estagio} onValueChange={setEstagio} name="estagio">
                       <SelectTrigger className="bg-input">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue placeholder={content.common.select} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="idea">Apenas ideia</SelectItem>
-                        <SelectItem value="validation">Em validação</SelectItem>
-                        <SelectItem value="prototype">Com protótipo</SelectItem>
-                        <SelectItem value="mvp">MVP pronto</SelectItem>
+                        <SelectItem value="idea">{ideaForm.stageOptions.idea}</SelectItem>
+                        <SelectItem value="validation">{ideaForm.stageOptions.validation}</SelectItem>
+                        <SelectItem value="prototype">{ideaForm.stageOptions.prototype}</SelectItem>
+                        <SelectItem value="mvp">{ideaForm.stageOptions.mvp}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="ajuda">Que tipo de ajuda precisa?</Label>
+                  <Label htmlFor="ajuda">{ideaForm.fields.help}</Label>
                   <Textarea
                     id="ajuda"
                     value={ajuda}
                     onChange={(event) => setAjuda(event.target.value)}
-                    placeholder="Desenvolvimento, design, marketing, vendas..."
+                    placeholder={ideaForm.fields.helpPlaceholder}
                     className="bg-input min-h-[60px]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="github-repo-url">Repositório GitHub do projeto</Label>
+                  <Label htmlFor="github-repo-url">{ideaForm.fields.githubRepo}</Label>
                   <Input
                     id="github-repo-url"
                     value={githubRepoUrl}
                     onChange={(event) => setGithubRepoUrl(event.target.value)}
-                    placeholder="https://github.com/owner/repo"
+                    placeholder={ideaForm.fields.githubRepoPlaceholder}
                     className="bg-input"
                   />
                 </div>
@@ -526,7 +541,7 @@ function IdeaFormSection() {
                   className="w-full bg-primary hover:bg-primary/90"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Enviando...' : 'Cadastrar minha ideia'}
+                  {isSubmitting ? ideaForm.submitting : ideaForm.submit}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </form>
@@ -539,6 +554,8 @@ function IdeaFormSection() {
 }
 
 function CollaboratorFormSection() {
+  const { content } = useLanguage()
+  const collaboratorForm = content.home.collaboratorForm
   const [nomeColab, setNomeColab] = useState('')
   const [emailColab, setEmailColab] = useState('')
   const [area, setArea] = useState('')
@@ -571,10 +588,10 @@ function CollaboratorFormSection() {
       const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result?.error || 'Erro ao enviar seus dados. Tente novamente.')
+        throw new Error(result?.error || collaboratorForm.submitError)
       }
 
-      alert('Cadastro de colaborador enviado com sucesso! Obrigado pela sua participação.')
+      alert(collaboratorForm.success)
       setNomeColab('')
       setEmailColab('')
       setArea('')
@@ -583,7 +600,7 @@ function CollaboratorFormSection() {
       setTipoProjeto('')
       setContribuicao('')
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Erro desconhecido ao enviar seu cadastro.')
+      alert(error instanceof Error ? error.message : collaboratorForm.unknownError)
     } finally {
       setIsSubmitting(false)
     }
@@ -595,31 +612,31 @@ function CollaboratorFormSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <Card className="bg-card border-border order-2 lg:order-1">
             <CardHeader>
-              <CardTitle className="text-xl text-foreground">Quero colaborar</CardTitle>
-              <CardDescription>Cadastre-se para participar de projetos inovadores</CardDescription>
+              <CardTitle className="text-xl text-foreground">{collaboratorForm.cardTitle}</CardTitle>
+              <CardDescription>{collaboratorForm.cardDescription}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="nome-colab">Nome</Label>
+                    <Label htmlFor="nome-colab">{collaboratorForm.fields.name}</Label>
                     <Input
                       id="nome-colab"
                       value={nomeColab}
                       onChange={(event) => setNomeColab(event.target.value)}
-                      placeholder="Seu nome"
+                      placeholder={collaboratorForm.fields.namePlaceholder}
                       className="bg-input"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email-colab">E-mail</Label>
+                    <Label htmlFor="email-colab">{collaboratorForm.fields.email}</Label>
                     <Input
                       id="email-colab"
                       type="email"
                       value={emailColab}
                       onChange={(event) => setEmailColab(event.target.value)}
-                      placeholder="seu@email.com"
+                      placeholder={collaboratorForm.fields.emailPlaceholder}
                       className="bg-input"
                       required
                     />
@@ -627,57 +644,57 @@ function CollaboratorFormSection() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="area">Área de atuação</Label>
+                    <Label htmlFor="area">{collaboratorForm.fields.area}</Label>
                     <Select value={area} onValueChange={setArea} name="area">
                       <SelectTrigger className="bg-input">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue placeholder={content.common.select} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="frontend">Front-end</SelectItem>
-                        <SelectItem value="backend">Back-end</SelectItem>
-                        <SelectItem value="fullstack">Full-stack</SelectItem>
-                        <SelectItem value="ux">UX/UI Design</SelectItem>
-                        <SelectItem value="pm">Product Management</SelectItem>
-                        <SelectItem value="marketing">Marketing</SelectItem>
-                        <SelectItem value="vendas">Vendas</SelectItem>
-                        <SelectItem value="outros">Outros</SelectItem>
+                        <SelectItem value="frontend">{collaboratorForm.areaOptions.frontend}</SelectItem>
+                        <SelectItem value="backend">{collaboratorForm.areaOptions.backend}</SelectItem>
+                        <SelectItem value="fullstack">{collaboratorForm.areaOptions.fullstack}</SelectItem>
+                        <SelectItem value="ux">{collaboratorForm.areaOptions.ux}</SelectItem>
+                        <SelectItem value="pm">{collaboratorForm.areaOptions.pm}</SelectItem>
+                        <SelectItem value="marketing">{collaboratorForm.areaOptions.marketing}</SelectItem>
+                        <SelectItem value="vendas">{collaboratorForm.areaOptions.sales}</SelectItem>
+                        <SelectItem value="outros">{collaboratorForm.areaOptions.other}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="nivel">Nível de experiência</Label>
+                    <Label htmlFor="nivel">{collaboratorForm.fields.experience}</Label>
                     <Select value={nivel} onValueChange={setNivel} name="nivel">
                       <SelectTrigger className="bg-input">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue placeholder={content.common.select} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="junior">Júnior (0-2 anos)</SelectItem>
-                        <SelectItem value="pleno">Pleno (2-5 anos)</SelectItem>
-                        <SelectItem value="senior">Sênior (5+ anos)</SelectItem>
+                        <SelectItem value="junior">{collaboratorForm.experienceOptions.junior}</SelectItem>
+                        <SelectItem value="pleno">{collaboratorForm.experienceOptions.mid}</SelectItem>
+                        <SelectItem value="senior">{collaboratorForm.experienceOptions.senior}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="horas">Horas disponíveis/semana</Label>
+                    <Label htmlFor="horas">{collaboratorForm.fields.hours}</Label>
                     <Select value={horas} onValueChange={setHoras} name="horas">
                       <SelectTrigger className="bg-input">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue placeholder={content.common.select} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="5">Até 5 horas</SelectItem>
-                        <SelectItem value="10">5-10 horas</SelectItem>
-                        <SelectItem value="20">10-20 horas</SelectItem>
-                        <SelectItem value="40">20+ horas</SelectItem>
+                        <SelectItem value="5">{collaboratorForm.hoursOptions.five}</SelectItem>
+                        <SelectItem value="10">{collaboratorForm.hoursOptions.ten}</SelectItem>
+                        <SelectItem value="20">{collaboratorForm.hoursOptions.twenty}</SelectItem>
+                        <SelectItem value="40">{collaboratorForm.hoursOptions.forty}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="tipo-projeto">Tipo de projeto</Label>
+                    <Label htmlFor="tipo-projeto">{collaboratorForm.fields.projectType}</Label>
                     <Select value={tipoProjeto} onValueChange={setTipoProjeto} name="tipoProjeto">
                       <SelectTrigger className="bg-input">
-                        <SelectValue placeholder="Selecione" />
+                        <SelectValue placeholder={content.common.select} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="saas">SaaS</SelectItem>
@@ -686,18 +703,18 @@ function CollaboratorFormSection() {
                         <SelectItem value="fintech">Fintech</SelectItem>
                         <SelectItem value="healthtech">Healthtech</SelectItem>
                         <SelectItem value="edtech">Edtech</SelectItem>
-                        <SelectItem value="qualquer">Qualquer área</SelectItem>
+                        <SelectItem value="qualquer">{collaboratorForm.projectTypeOptions.any}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contribuicao">Como pretende contribuir?</Label>
+                  <Label htmlFor="contribuicao">{collaboratorForm.fields.contribution}</Label>
                   <Textarea
                     id="contribuicao"
                     value={contribuicao}
                     onChange={(event) => setContribuicao(event.target.value)}
-                    placeholder="Descreva como você pode ajudar nos projetos..."
+                    placeholder={collaboratorForm.fields.contributionPlaceholder}
                     className="bg-input min-h-[60px]"
                   />
                 </div>
@@ -706,7 +723,7 @@ function CollaboratorFormSection() {
                   className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Enviando...' : 'Quero colaborar'}
+                  {isSubmitting ? collaboratorForm.submitting : collaboratorForm.submit}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </form>
@@ -715,11 +732,10 @@ function CollaboratorFormSection() {
           
           <div className="order-1 lg:order-2">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Para quem quer colaborar
+              {collaboratorForm.title}
             </h2>
             <p className="text-lg text-muted-foreground mb-6 text-pretty">
-              Quer participar de startups mesmo sem investir dinheiro? Contribua com tempo e conhecimento 
-              e ganhe participação proporcional ao seu esforço através do ColabScore.
+              {collaboratorForm.description}
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -727,8 +743,8 @@ function CollaboratorFormSection() {
                   <Award className="h-4 w-4 text-secondary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Ganhe participação real</h4>
-                  <p className="text-sm text-muted-foreground">Suas contribuições são convertidas em equity futuro</p>
+                  <h4 className="font-semibold text-foreground">{collaboratorForm.benefits[0].title}</h4>
+                  <p className="text-sm text-muted-foreground">{collaboratorForm.benefits[0].description}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -736,8 +752,8 @@ function CollaboratorFormSection() {
                   <TrendingUp className="h-4 w-4 text-secondary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Desenvolva habilidades</h4>
-                  <p className="text-sm text-muted-foreground">Trabalhe em projetos reais com equipes diversas</p>
+                  <h4 className="font-semibold text-foreground">{collaboratorForm.benefits[1].title}</h4>
+                  <p className="text-sm text-muted-foreground">{collaboratorForm.benefits[1].description}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -745,8 +761,8 @@ function CollaboratorFormSection() {
                   <Building2 className="h-4 w-4 text-secondary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Faça parte do sucesso</h4>
-                  <p className="text-sm text-muted-foreground">Acompanhe o crescimento das startups que ajudou a criar</p>
+                  <h4 className="font-semibold text-foreground">{collaboratorForm.benefits[2].title}</h4>
+                  <p className="text-sm text-muted-foreground">{collaboratorForm.benefits[2].description}</p>
                 </div>
               </div>
             </div>
@@ -758,6 +774,9 @@ function CollaboratorFormSection() {
 }
 
 function DatabasePreviewSection() {
+  const { content } = useLanguage()
+  const database = content.home.database
+  const common = content.common
   const [ideas, setIdeas] = useState<Idea[]>([])
   const [collaborators, setCollaborators] = useState<Collaborator[]>([])
   const [loading, setLoading] = useState(true)
@@ -772,7 +791,7 @@ function DatabasePreviewSection() {
         ])
 
         if (!ideasRes.ok || !collaboratorsRes.ok) {
-          throw new Error('Falha ao buscar dados do banco.')
+          throw new Error(database.loadError)
         }
 
         const ideasJson = await ideasRes.json()
@@ -781,49 +800,49 @@ function DatabasePreviewSection() {
         setIdeas(ideasJson.data ?? [])
         setCollaborators(collaboratorsJson.data ?? [])
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro desconhecido ao carregar dados.')
+        setError(err instanceof Error ? err.message : database.unknownError)
       } finally {
         setLoading(false)
       }
     }
 
     loadData()
-  }, [])
+  }, [database.loadError, database.unknownError])
 
   return (
     <section id="dados-do-banco" className="py-24 bg-background/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">Dados reais do banco</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">{database.title}</h2>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            Veja as ideias e colaboradores armazenados no Supabase em tempo real.
+            {database.subtitle}
           </p>
         </div>
 
         {loading ? (
-          <div className="text-center text-foreground">Carregando dados...</div>
+          <div className="text-center text-foreground">{database.loading}</div>
         ) : error ? (
           <div className="text-center text-destructive">{error}</div>
         ) : (
           <div className="grid gap-8 lg:grid-cols-2">
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-lg text-foreground">Últimas ideias cadastradas</CardTitle>
-                <CardDescription>{ideas.length} registro(s) no banco</CardDescription>
+                <CardTitle className="text-lg text-foreground">{database.ideasTitle}</CardTitle>
+                <CardDescription>{ideas.length} {database.recordsInDatabase}</CardDescription>
               </CardHeader>
               <CardContent>
                 {ideas.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Nenhuma ideia cadastrada ainda.</p>
+                  <p className="text-sm text-muted-foreground">{database.noIdeas}</p>
                 ) : (
                   <div className="space-y-4">
                     {ideas.slice(0, 4).map((idea) => (
                       <div key={idea.id} className="rounded-2xl border border-border p-4 bg-background">
                         <div className="flex items-center justify-between gap-4 mb-2">
                           <span className="font-semibold text-foreground">{idea.nome_projeto}</span>
-                          <span className="text-xs text-muted-foreground">{idea.estagio ?? 'Não informado'}</span>
+                          <span className="text-xs text-muted-foreground">{idea.estagio ?? common.notProvided}</span>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">{idea.problema}</p>
-                        <p className="text-sm text-foreground"><strong>{idea.nome}</strong> · {idea.publico ?? 'Público não informado'}</p>
+                        <p className="text-sm text-foreground"><strong>{idea.nome}</strong> · {idea.publico ?? database.audienceNotProvided}</p>
                       </div>
                     ))}
                   </div>
@@ -833,12 +852,12 @@ function DatabasePreviewSection() {
 
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-lg text-foreground">Últimos colaboradores</CardTitle>
-                <CardDescription>{collaborators.length} registro(s) no banco</CardDescription>
+                <CardTitle className="text-lg text-foreground">{database.collaboratorsTitle}</CardTitle>
+                <CardDescription>{collaborators.length} {database.recordsInDatabase}</CardDescription>
               </CardHeader>
               <CardContent>
                 {collaborators.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Nenhum colaborador cadastrado ainda.</p>
+                  <p className="text-sm text-muted-foreground">{database.noCollaborators}</p>
                 ) : (
                   <div className="space-y-4">
                     {collaborators.slice(0, 4).map((collab) => (
@@ -847,8 +866,8 @@ function DatabasePreviewSection() {
                           <span className="font-semibold text-foreground">{collab.nome}</span>
                           <span className="text-xs text-muted-foreground">{collab.nivel}</span>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2">Área: {collab.area}</p>
-                        <p className="text-sm text-foreground">Disponibilidade: {collab.horas ?? 'Não informada'}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{database.area}: {collab.area}</p>
+                        <p className="text-sm text-foreground">{database.availability}: {collab.horas ?? database.availabilityNotProvided}</p>
                       </div>
                     ))}
                   </div>
@@ -863,20 +882,22 @@ function DatabasePreviewSection() {
 }
 
 function ColabScoreSection() {
+  const { content } = useLanguage()
+  const colabScore = content.home.colabScore
+
   return (
     <section id="colabscore" className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
             <Award className="h-4 w-4" />
-            Sistema de Pontuação
+            {colabScore.badge}
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            ColabScore
+            {colabScore.title}
           </h2>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            Uma camada inteligente sobre ferramentas que você já usa: GitHub, GitLab, Trello, Jira, Notion. 
-            Cada contribuição é registrada, validada e convertida em pontos de participação.
+            {colabScore.description}
           </p>
         </div>
 
@@ -899,14 +920,14 @@ function ColabScoreSection() {
         {/* Formula */}
         <Card className="bg-card border-border mb-12 max-w-4xl mx-auto">
           <CardContent className="p-8">
-            <h3 className="text-lg font-semibold text-foreground mb-4 text-center">Fórmula do ColabScore</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4 text-center">{colabScore.formulaTitle}</h3>
             <div className="bg-muted/50 rounded-xl p-6 text-center overflow-x-auto">
               <code className="text-sm md:text-base text-foreground font-mono whitespace-nowrap">
-                <span className="text-primary font-bold">Pontos</span> = Horas validadas × Valor-hora × <span className="text-secondary">Fator de entrega</span> × <span className="text-accent">Fator de impacto</span> × Fator de risco
+                <span className="text-primary font-bold">{colabScore.points}</span> = {colabScore.validatedHours} × {colabScore.hourlyValue} × <span className="text-secondary">{colabScore.deliveryFactor}</span> × <span className="text-accent">{colabScore.impactFactor}</span> × {colabScore.riskFactor}
               </code>
             </div>
             <p className="text-sm text-muted-foreground text-center mt-4">
-              Cada variável é calculada automaticamente com base nas evidências registradas nas ferramentas integradas.
+              {colabScore.formulaHelp}
             </p>
           </CardContent>
         </Card>
@@ -914,19 +935,19 @@ function ColabScoreSection() {
         {/* Demo table */}
         <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-xl text-foreground">Tabela demonstrativa</CardTitle>
-            <CardDescription>Exemplo de pontuação por colaborador em diferentes projetos</CardDescription>
+            <CardTitle className="text-xl text-foreground">{colabScore.tableTitle}</CardTitle>
+            <CardDescription>{colabScore.tableDescription}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Projeto</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Colaborador</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Função</th>
-                    <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">Pontos</th>
-                    <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">Participação</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">{colabScore.headers.project}</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">{colabScore.headers.collaborator}</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">{colabScore.headers.role}</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">{colabScore.headers.points}</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">{colabScore.headers.participation}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -951,7 +972,7 @@ function ColabScoreSection() {
               </table>
             </div>
             <p className="text-sm text-muted-foreground mt-4 text-center">
-              Cada projeto tem seu próprio banco de pontos. Acúmulo transparente por contribuição.
+              {colabScore.caption}
             </p>
           </CardContent>
         </Card>
@@ -961,6 +982,9 @@ function ColabScoreSection() {
 }
 
 function DashboardSection() {
+  const { content } = useLanguage()
+  const dashboardText = content.home.dashboard
+  const locale = content.locale
   const [dashboard, setDashboard] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -972,26 +996,26 @@ function DashboardSection() {
         const result = await response.json()
 
         if (!response.ok) {
-          throw new Error(result?.error || 'Erro ao carregar dashboard.')
+          throw new Error(result?.error || dashboardText.loadError)
         }
 
         setDashboard(result)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro desconhecido ao carregar dashboard.')
+        setError(err instanceof Error ? err.message : dashboardText.unknownError)
       } finally {
         setLoading(false)
       }
     }
 
     loadDashboard()
-  }, [])
+  }, [dashboardText.loadError, dashboardText.unknownError])
 
   const formatDate = (value?: string | null) => {
     if (!value) {
-      return 'Sem aceite'
+      return dashboardText.noAcceptedDate
     }
 
-    return new Intl.DateTimeFormat('pt-BR', {
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -1003,19 +1027,19 @@ function DashboardSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Dashboard
+            {dashboardText.title}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Cada contribuição fica ligada a um projeto, tarefa e evidência. Justo, transparente e motivador.
+            {dashboardText.subtitle}
           </p>
           <p className="text-sm text-muted-foreground max-w-3xl mx-auto mt-3">
-            Dados calculados a partir de tarefas submetidas, revisadas e aceitas no fluxo GitHub.
+            {dashboardText.note}
           </p>
         </div>
 
         {loading ? (
           <Card className="bg-card border-border">
-            <CardContent className="pt-6 text-center text-muted-foreground">Carregando dashboard...</CardContent>
+            <CardContent className="pt-6 text-center text-muted-foreground">{dashboardText.loading}</CardContent>
           </Card>
         ) : error ? (
           <Card className="bg-card border-border">
@@ -1026,53 +1050,53 @@ function DashboardSection() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card className="bg-card border-border">
                 <CardContent className="p-5">
-                  <div className="text-sm text-muted-foreground">Projetos</div>
+                  <div className="text-sm text-muted-foreground">{dashboardText.cards.projects}</div>
                   <div className="text-3xl font-bold text-foreground mt-2">{dashboard.overview.totalProjects}</div>
                 </CardContent>
               </Card>
               <Card className="bg-card border-border">
                 <CardContent className="p-5">
-                  <div className="text-sm text-muted-foreground">Issues</div>
+                  <div className="text-sm text-muted-foreground">{dashboardText.cards.issues}</div>
                   <div className="text-3xl font-bold text-foreground mt-2">{dashboard.overview.totalIssues}</div>
                 </CardContent>
               </Card>
               <Card className="bg-card border-border">
                 <CardContent className="p-5">
-                  <div className="text-sm text-muted-foreground">Tarefas ativas</div>
+                  <div className="text-sm text-muted-foreground">{dashboardText.cards.activeTasks}</div>
                   <div className="text-3xl font-bold text-foreground mt-2">{dashboard.overview.activeTasks}</div>
                 </CardContent>
               </Card>
               <Card className="bg-card border-border">
                 <CardContent className="p-5">
-                  <div className="text-sm text-muted-foreground">Pontos</div>
-                  <div className="text-3xl font-bold text-accent mt-2">{dashboard.overview.totalPoints.toLocaleString('pt-BR')}</div>
+                  <div className="text-sm text-muted-foreground">{dashboardText.cards.points}</div>
+                  <div className="text-3xl font-bold text-accent mt-2">{dashboard.overview.totalPoints.toLocaleString(locale)}</div>
                 </CardContent>
               </Card>
             </div>
 
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-lg text-foreground">Visão Geral de Projetos</CardTitle>
+                <CardTitle className="text-lg text-foreground">{dashboardText.projectsOverview}</CardTitle>
                 <CardDescription>
-                  {dashboard.overview.submittedTasks} tarefa(s) submetida(s), {dashboard.overview.reviewedTasks} revisada(s), {dashboard.overview.finalizedIssues} issue(s) finalizada(s), {dashboard.overview.activeCollaborators} colaborador(es) ativo(s)
+                  {dashboard.overview.submittedTasks} {dashboardText.submittedTasks}, {dashboard.overview.reviewedTasks} {dashboardText.reviewedTasks}, {dashboard.overview.finalizedIssues} {dashboardText.finalizedIssues}, {dashboard.overview.activeCollaborators} {dashboardText.activeCollaborators}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {dashboard.projects.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Nenhum projeto cadastrado ainda.</p>
+                  <p className="text-sm text-muted-foreground">{dashboardText.noProjects}</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Projeto</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Issues</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Em andamento</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Submetidas</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Aceitas</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Rejeitadas</th>
-                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Finalizadas</th>
-                          <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">Pontos</th>
+                          <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.project}</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.issues}</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.inProgress}</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.submitted}</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.accepted}</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.rejected}</th>
+                          <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.finalized}</th>
+                          <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">{dashboardText.tableHeaders.points}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1080,7 +1104,7 @@ function DashboardSection() {
                           <tr key={project.ideaId} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                             <td className="py-3 px-4">
                               <div className="font-medium text-foreground">{project.title}</div>
-                              <div className="text-xs text-muted-foreground">{project.ownerEmail || 'Responsável não informado'}</div>
+                              <div className="text-xs text-muted-foreground">{project.ownerEmail || dashboardText.ownerNotProvided}</div>
                             </td>
                             <td className="py-3 px-4 text-center text-muted-foreground">{project.totalIssues}</td>
                             <td className="py-3 px-4 text-center text-muted-foreground">{project.activeTasks ?? project.claimedTasks}</td>
@@ -1088,7 +1112,7 @@ function DashboardSection() {
                             <td className="py-3 px-4 text-center text-secondary">{project.acceptedTasks}</td>
                             <td className="py-3 px-4 text-center text-muted-foreground">{project.rejectedTasks}</td>
                             <td className="py-3 px-4 text-center text-muted-foreground">{project.finalizedIssues}</td>
-                            <td className="py-3 px-4 text-right font-semibold text-accent">{project.totalPoints.toLocaleString('pt-BR')}</td>
+                            <td className="py-3 px-4 text-right font-semibold text-accent">{project.totalPoints.toLocaleString(locale)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -1101,20 +1125,20 @@ function DashboardSection() {
             <div className="grid lg:grid-cols-2 gap-8">
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-lg text-foreground">Top colaboradores</CardTitle>
-                <CardDescription>Pontos vindos de tarefas aceitas</CardDescription>
+                <CardTitle className="text-lg text-foreground">{dashboardText.topCollaborators}</CardTitle>
+                <CardDescription>{dashboardText.topCollaboratorsDescription}</CardDescription>
               </CardHeader>
               <CardContent>
                 {dashboard.topCollaborators.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Nenhum ponto aceito ainda.</p>
+                  <p className="text-sm text-muted-foreground">{dashboardText.noPoints}</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-2 px-3 text-xs font-semibold text-muted-foreground">Nome</th>
-                          <th className="text-center py-2 px-3 text-xs font-semibold text-muted-foreground">Aceites</th>
-                          <th className="text-right py-2 px-3 text-xs font-semibold text-muted-foreground">Pontos</th>
+                          <th className="text-left py-2 px-3 text-xs font-semibold text-muted-foreground">{dashboardText.tableHeaders.name}</th>
+                          <th className="text-center py-2 px-3 text-xs font-semibold text-muted-foreground">{dashboardText.tableHeaders.accepts}</th>
+                          <th className="text-right py-2 px-3 text-xs font-semibold text-muted-foreground">{dashboardText.tableHeaders.points}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1125,7 +1149,7 @@ function DashboardSection() {
                               <div className="text-xs text-muted-foreground">{collaborator.email}</div>
                             </td>
                             <td className="py-2 px-3 text-center text-sm text-muted-foreground">{collaborator.acceptedTasks}</td>
-                            <td className="py-2 px-3 text-right text-sm font-semibold text-accent">{collaborator.totalPoints.toLocaleString('pt-BR')}</td>
+                            <td className="py-2 px-3 text-right text-sm font-semibold text-accent">{collaborator.totalPoints.toLocaleString(locale)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -1137,12 +1161,12 @@ function DashboardSection() {
 
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-lg text-foreground">Tarefas aceitas recentes</CardTitle>
-                <CardDescription>Últimas contribuições revisadas e aceitas</CardDescription>
+                <CardTitle className="text-lg text-foreground">{dashboardText.recentAcceptedTasks}</CardTitle>
+                <CardDescription>{dashboardText.recentAcceptedTasksDescription}</CardDescription>
               </CardHeader>
               <CardContent>
                 {dashboard.recentAcceptedTasks.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Nenhuma tarefa aceita ainda.</p>
+                  <p className="text-sm text-muted-foreground">{dashboardText.noAcceptedTasks}</p>
                 ) : (
                   <div className="space-y-4">
                     {dashboard.recentAcceptedTasks.map((task, index) => (
@@ -1156,18 +1180,18 @@ function DashboardSection() {
                               {task.projectTitle} · {task.collaboratorName || task.collaboratorEmail} · {formatDate(task.acceptedDate)}
                             </div>
                           </div>
-                          <div className="text-sm font-semibold text-accent whitespace-nowrap">{task.points.toLocaleString('pt-BR')} pts</div>
+                          <div className="text-sm font-semibold text-accent whitespace-nowrap">{task.points.toLocaleString(locale)} {dashboardText.pointsSuffix}</div>
                         </div>
                         {(task.evidence_url || task.githubIssueUrl) && (
                           <div className="flex flex-wrap gap-3 mt-3 text-xs">
                             {task.evidence_url && (
                               <a className="text-primary hover:underline" href={task.evidence_url} target="_blank" rel="noreferrer">
-                                Evidência
+                                {dashboardText.evidence}
                               </a>
                             )}
                             {task.githubIssueUrl && (
                               <a className="text-primary hover:underline" href={task.githubIssueUrl} target="_blank" rel="noreferrer">
-                                Issue GitHub
+                                {dashboardText.githubIssue}
                               </a>
                             )}
                           </div>
@@ -1187,8 +1211,15 @@ function DashboardSection() {
 }
 
 function ToolkitSection() {
+  const { content } = useLanguage()
+  const toolkit = content.home.toolkit
+  const toolkitStepsWithText = toolkitSteps.map((step, index) => ({
+    ...step,
+    ...toolkit.steps[index],
+  }))
+
   const handleClick = () => {
-    alert("Funcionalidade em desenvolvimento no MVP")
+    alert(toolkit.alert)
   }
 
   return (
@@ -1196,16 +1227,15 @@ function ToolkitSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Guia Integrado de Inovação
+            {toolkit.title}
           </h2>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            A ColabSocial guia cada projeto por etapas práticas de inovação com templates e scorecards. 
-            Do problema à recompensa, cada passo é estruturado e mensurável.
+            {toolkit.subtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {toolkitSteps.map((step, index) => (
+          {toolkitStepsWithText.map((step, index) => (
             <Card 
               key={index} 
               className="bg-card border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 group"
@@ -1214,7 +1244,7 @@ function ToolkitSection() {
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <step.icon className="h-7 w-7 text-primary" />
                 </div>
-                <div className="text-xs font-bold text-accent mb-2">Etapa {index + 1}</div>
+                <div className="text-xs font-bold text-accent mb-2">{toolkit.stepPrefix} {index + 1}</div>
                 <h3 className="font-semibold text-foreground mb-2">{step.title}</h3>
                 <p className="mb-4 min-h-[48px] text-sm text-muted-foreground">{step.description}</p>
                 {step.href ? (
@@ -1250,6 +1280,9 @@ function ToolkitSection() {
 }
 
 function ColabAiAssistSection() {
+  const { content } = useLanguage()
+  const hub = content.home.hubs.colabAi
+
   return (
     <section className="bg-card/50 py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1257,24 +1290,24 @@ function ColabAiAssistSection() {
           <CardContent className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
             <div className="flex flex-col gap-3">
               <Badge variant="outline" className="w-fit">
-                MVP experimental
+                {hub.badge}
               </Badge>
               <div>
                 <h2 className="flex items-center gap-3 text-2xl font-bold text-foreground md:text-3xl">
                   <BrainCircuit className="h-7 w-7 text-primary" />
-                  ColabAI Assist
+                  {hub.title}
                 </h2>
                 <p className="mt-2 max-w-3xl text-muted-foreground">
-                  Use IA para entender tarefas, gerar planos técnicos, criar prompts para IDE e revisar entregas.
+                  {hub.description}
                 </p>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  MVP experimental com créditos internos. Não compartilha contas premium; usa API no backend.
+                  {hub.note}
                 </p>
               </div>
             </div>
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <a href="/colabai">
-                Abrir ColabAI Assist
+                {hub.cta}
                 <ChevronRight className="h-4 w-4" />
               </a>
             </Button>
@@ -1286,6 +1319,9 @@ function ColabAiAssistSection() {
 }
 
 function LegalEquityHubSection() {
+  const { content } = useLanguage()
+  const hub = content.home.hubs.legal
+
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1293,24 +1329,24 @@ function LegalEquityHubSection() {
           <CardContent className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
             <div className="flex flex-col gap-3">
               <Badge variant="outline" className="w-fit">
-                Educação jurídica e societária
+                {hub.badge}
               </Badge>
               <div>
                 <h2 className="flex items-center gap-3 text-2xl font-bold text-foreground md:text-3xl">
                   <Scale className="h-7 w-7 text-primary" />
-                  Legal & Equity Hub
+                  {hub.title}
                 </h2>
                 <p className="mt-2 max-w-3xl text-muted-foreground">
-                  Entenda participação, direitos, documentos, diluição e cenários futuros do projeto.
+                  {hub.description}
                 </p>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Conteúdo educativo para organizar decisões antes da formalização jurídica.
+                  {hub.note}
                 </p>
               </div>
             </div>
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <a href="/legal-equity">
-                Abrir Legal & Equity Hub
+                {hub.cta}
                 <ChevronRight className="h-4 w-4" />
               </a>
             </Button>
@@ -1322,6 +1358,9 @@ function LegalEquityHubSection() {
 }
 
 function MaturityInvestmentHubSection() {
+  const { content } = useLanguage()
+  const hub = content.home.hubs.maturity
+
   return (
     <section className="bg-card/50 py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1329,24 +1368,24 @@ function MaturityInvestmentHubSection() {
           <CardContent className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
             <div className="flex flex-col gap-3">
               <Badge variant="outline" className="w-fit">
-                Prontidão para captação
+                {hub.badge}
               </Badge>
               <div>
                 <h2 className="flex items-center gap-3 text-2xl font-bold text-foreground md:text-3xl">
                   <BarChart3 className="h-7 w-7 text-primary" />
-                  Maturity & Investment Hub
+                  {hub.title}
                 </h2>
                 <p className="mt-2 max-w-3xl text-muted-foreground">
-                  Meça a maturidade do projeto, acompanhe indicadores e prepare a startup para captação.
+                  {hub.description}
                 </p>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  MVP demonstrativo para organizar evidências, riscos e próximos marcos.
+                  {hub.note}
                 </p>
               </div>
             </div>
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <a href="/maturity-investment">
-                Abrir Maturity Hub
+                {hub.cta}
                 <ChevronRight className="h-4 w-4" />
               </a>
             </Button>
@@ -1358,6 +1397,9 @@ function MaturityInvestmentHubSection() {
 }
 
 function FundingOpportunitiesSection() {
+  const { content } = useLanguage()
+  const hub = content.home.hubs.funding
+
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1365,24 +1407,24 @@ function FundingOpportunitiesSection() {
           <CardContent className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
             <div className="flex flex-col gap-3">
               <Badge variant="outline" className="w-fit">
-                Oportunidades e editais
+                {hub.badge}
               </Badge>
               <div>
                 <h2 className="flex items-center gap-3 text-2xl font-bold text-foreground md:text-3xl">
                   <HandCoins className="h-7 w-7 text-primary" />
-                  Editais e Financiamento
+                  {hub.title}
                 </h2>
                 <p className="mt-2 max-w-3xl text-muted-foreground">
-                  Encontre editais, subvenções, aceleração e oportunidades compatíveis com seu projeto.
+                  {hub.description}
                 </p>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  MVP demonstrativo com filtros, match score, favoritos, alertas simulados e checklist de submissão.
+                  {hub.note}
                 </p>
               </div>
             </div>
             <Button className="bg-primary hover:bg-primary/90" asChild>
               <a href="/funding-opportunities">
-                Buscar oportunidades
+                {hub.cta}
                 <ChevronRight className="h-4 w-4" />
               </a>
             </Button>
@@ -1394,6 +1436,9 @@ function FundingOpportunitiesSection() {
 }
 
 function CTASection() {
+  const { content } = useLanguage()
+  const cta = content.home.cta
+
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/10 to-accent/10" />
@@ -1402,23 +1447,22 @@ function CTASection() {
       
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
-          Faça parte de um novo modelo de empreendedorismo colaborativo
+          {cta.title}
         </h2>
         <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
-          Conecte-se com pessoas que compartilham sua visão. Transforme ideias em realidade com o 
-          poder da colaboração.
+          {cta.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg" asChild>
             <a href="#cadastrar-ideia">
               <Lightbulb className="mr-2 h-5 w-5" />
-              Cadastrar uma ideia
+              {cta.idea}
             </a>
           </Button>
           <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary/10 px-8 py-6 text-lg" asChild>
             <a href="#colaborar">
               <Users className="mr-2 h-5 w-5" />
-              Quero colaborar
+              {cta.collaborate}
             </a>
           </Button>
         </div>
@@ -1428,6 +1472,9 @@ function CTASection() {
 }
 
 function Footer() {
+  const { content } = useLanguage()
+  const footer = content.home.footer
+
   return (
     <footer className="py-12 border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1438,17 +1485,17 @@ function Footer() {
           
           <div className="text-center md:text-right space-y-1">
             <p className="text-muted-foreground text-sm">
-              Out_off_D_Box: conectando ideias, pessoas, produtos e inovação.
+              {footer.taglineOne}
             </p>
             <p className="text-muted-foreground text-sm">
-              Out_off_D_Box: evoluindo ideias, evoluindo pessoas, evoluindo o mundo.
+              {footer.taglineTwo}
             </p>
           </div>
         </div>
         
         <div className="mt-8 pt-8 border-t border-border/50 text-center">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ColabSocial. Todos os direitos reservados.
+            © {new Date().getFullYear()} ColabSocial. {footer.rights}
           </p>
         </div>
       </div>

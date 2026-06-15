@@ -1,3 +1,5 @@
+"use client"
+
 import {
   BarChart3,
   BrainCircuit,
@@ -13,6 +15,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useLanguage } from "@/src/i18n/LanguageProvider"
 
 const groups = [
   {
@@ -50,16 +53,27 @@ const groups = [
 ]
 
 export function QuickAccessGrid() {
+  const { content } = useLanguage()
+  const quickAccess = content.home.quickAccess
+  const groupsWithText = groups.map((group, groupIndex) => ({
+    ...group,
+    title: quickAccess.groups[groupIndex].title,
+    items: group.items.map((item, itemIndex) => ({
+      ...item,
+      ...quickAccess.groups[groupIndex].items[itemIndex],
+    })),
+  }))
+
   return (
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold text-foreground md:text-4xl">Acesse rapidamente</h2>
-          <p className="mt-3 text-lg text-muted-foreground">Escolha o que deseja fazer agora.</p>
+          <h2 className="text-3xl font-bold text-foreground md:text-4xl">{quickAccess.title}</h2>
+          <p className="mt-3 text-lg text-muted-foreground">{quickAccess.subtitle}</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          {groups.map((group) => (
+          {groupsWithText.map((group) => (
             <Card key={group.title} className="border-border bg-card">
               <CardContent className="p-5 sm:p-6">
                 <h3 className="text-lg font-semibold text-foreground">{group.title}</h3>
