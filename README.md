@@ -209,6 +209,22 @@ The home page includes a feature carousel near the top to explain the full CoSoc
 
 The first carousel card shows the full CoSocial journey with language-aware flow images: `public/home/cosocial-flow.png` for Portuguese and `public/home/cosocial-flow-en.png` for English.
 
+### Home demo video
+
+The first home carousel card can show an optional demo video. Place the MP4 file at:
+
+```text
+public/home/videos/cosocial-demo.mp4
+```
+
+The public path used by the app is:
+
+```text
+/home/videos/cosocial-demo.mp4
+```
+
+The video does not autoplay and uses `preload="metadata"` so the full file is not loaded before the visitor chooses to play it.
+
 Module cards use feature-specific visual illustrations stored in `public/home/feature-cards/` for Portuguese and `public/home/feature-cards/english/` for English. The carousel switches between `card2.png` through `card8.png` and `card2-en.png` through `card8-en.png` automatically when the selected language changes.
 
 It also groups modules by user intention so visitors can quickly choose whether they want to register an idea, contribute to a project, review deliveries, configure ColabScore, use ColabAI, prepare legal/equity materials, measure maturity, or search funding opportunities.

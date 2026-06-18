@@ -1,9 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import { useEffect, useState } from "react"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { FeatureCardVisual } from "@/components/home/FeatureCardVisual"
+import { HomeDemoVideo } from "@/components/home/HomeDemoVideo"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -170,7 +170,9 @@ export function FeatureCarousel() {
   const { content, language } = useLanguage()
   const carousel = content.home.featureCarousel
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
+  const [isHoverPaused, setIsHoverPaused] = useState(false)
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const isPaused = isHoverPaused || isVideoPlaying
 
   useEffect(() => {
     if (isPaused) {
@@ -214,11 +216,11 @@ export function FeatureCarousel() {
 
         <Card
           className="overflow-hidden border-border bg-card"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          onMouseEnter={() => setIsHoverPaused(true)}
+          onMouseLeave={() => setIsHoverPaused(false)}
         >
           <CardContent className="p-0">
-            <div className={`grid gap-0 ${isFlowImageSlide ? "min-h-[430px] lg:grid-cols-[0.72fr_1.28fr]" : "min-h-[520px] items-center lg:grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]"}`}>
+            <div className={`grid gap-0 ${isFlowImageSlide ? "min-h-[500px] items-center lg:grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]" : "min-h-[520px] items-center lg:grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]"}`}>
               <div className="flex min-w-0 flex-col justify-between p-6 sm:p-8 lg:p-10">
                 <div>
                   <div className="mb-5 flex flex-wrap gap-2">
@@ -266,23 +268,14 @@ export function FeatureCarousel() {
               </div>
 
               <div className={`relative min-w-0 border-t border-border bg-gradient-to-br from-primary/15 via-background to-secondary/20 lg:border-l lg:border-t-0 ${
-                isFlowImageSlide ? "min-h-[240px] p-6 lg:p-10" : "min-h-[320px] p-4 sm:p-6 lg:min-h-[520px] lg:p-8"
+                isFlowImageSlide ? "min-h-[300px] p-4 sm:p-6 lg:p-8" : "min-h-[320px] p-4 sm:p-6 lg:min-h-[520px] lg:p-8"
               }`}>
                 <div className="absolute right-6 top-6 z-20 rounded-full border border-border bg-card px-3 py-1 text-sm text-muted-foreground shadow-sm">
                   {activeIndex + 1}/{slides.length}
                 </div>
                 {isFlowImageSlide ? (
-                  <div className="flex h-full items-center justify-center pt-8 lg:pt-0">
-                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-border bg-card shadow-xl shadow-primary/10">
-                      <Image
-                        src={imageSrc}
-                        alt={imageAlt}
-                        fill
-                        priority
-                        sizes="(min-width: 1024px) 720px, 100vw"
-                        className="object-contain p-3"
-                      />
-                    </div>
+                  <div className="flex h-full items-center justify-center pt-10 lg:pt-0">
+                    <HomeDemoVideo onPlaybackChange={setIsVideoPlaying} />
                   </div>
                 ) : (
                   <div className="flex h-full items-center justify-center pt-10 lg:pt-0">

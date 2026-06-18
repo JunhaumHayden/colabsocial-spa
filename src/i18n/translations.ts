@@ -61,6 +61,11 @@ export const translations = {
         nextSlide: "Próximo slide",
         goToSlide: "Ir para slide",
         flowImageAlt: "Fluxo CoSocial da ideia à startup",
+        demoVideo: {
+          label: "Veja a plataforma em funcionamento",
+          description: "Demonstração em vídeo de telas e funcionalidades do CoSocial.",
+          fallback: "Seu navegador não suporta vídeo HTML5.",
+        },
         slides: [
           {
             eyebrow: "Fluxo completo CoSocial",
@@ -661,6 +666,11 @@ export const translations = {
         nextSlide: "Next slide",
         goToSlide: "Go to slide",
         flowImageAlt: "CoSocial flow from idea to startup",
+        demoVideo: {
+          label: "See the platform in action",
+          description: "Video demonstration of CoSocial screens and features.",
+          fallback: "Your browser does not support HTML5 video.",
+        },
         slides: [
           {
             eyebrow: "Complete CoSocial flow",
